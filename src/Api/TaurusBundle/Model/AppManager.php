@@ -80,7 +80,7 @@ abstract class AppManager extends Manager implements AppConstants , AppManagerIn
     */
     public function sendAuthorizationCode($authorizationcode){
         
-        // write here the code to send the code to the user's smartphone
+        // implement here the code to send the authorization code to the user's smartphone
         return AppConstants::SUCCESS_RESPONSE;        
     }
     
@@ -90,7 +90,7 @@ abstract class AppManager extends Manager implements AppConstants , AppManagerIn
     */
     public function sendOperationCode($operationcode,$user){
         
-        // write here the code to send the code to the user's email
+        // implement here the code to send the operation reference number to the user's email
         return AppConstants::SUCCESS_RESPONSE;        
     }
     
