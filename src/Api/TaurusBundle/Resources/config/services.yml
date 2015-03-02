@@ -1,0 +1,78 @@
+parameters:
+#    api_taurus.example.class: Api\TaurusBundle\Example
+
+   apitaurus.manager.class: Api\TaurusBundle\Model\Manager
+   apitaurus.app_manager.class: Api\TaurusBundle\Doctrine\DoctrineAppManager
+   apitaurus.manager_factory.class: Api\TaurusBundle\Model\ManagerFactory
+   apitaurus.ent_manager.class: Api\TaurusBundle\Model\EntManagerLoader
+   apitaurus.filter_manager_event.class: Api\TaurusBundle\Event\FilterManagerEvent 
+
+services:
+#    api_taurus.example:
+#        class: %api_taurus.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
+
+   apitaurus.ent_manager:
+      class:   %apitaurus.ent_manager.class%
+      arguments:   [@doctrine.orm.entity_manager]
+      
+
+   apitaurus.manager:
+      class:   %apitaurus.manager.class%
+      arguments:   [@service_container,@apitaurus.manager_factory,@apitaurus.ent_manager]
+      
+
+   apitaurus.manager_factory:
+      class:   %apitaurus.manager_factory.class%
+      
+      
+   apitaurus.app_manager:
+      class:   %apitaurus.app_manager.class%
+      arguments:   [@service_container,@apitaurus.manager_factory,@apitaurus.ent_manager]
+      
+
+   apitaurus.filter_manager_event:
+      class:   %apitaurus.filter_manager_event.class%
+      arguments:   [@service_container,@apitaurus.manager_factory]
+
+
+   apitaurus.init.transaction:
+      class: Api\TaurusBundle\EventListener\VerifyCodeListener
+      tags:
+         - { name: kernel.event_listener, event: init.transaction, method: onProcess }
+         
+         
+   apitaurus.send.auhorizationcode:
+      class: Api\TaurusBundle\EventListener\SendAuthorizationCodeListener
+      tags:
+         - { name: kernel.event_listener, event: send.auhorizationcode, method: onProcess }
+         
+         
+   apitaurus.check.auhorizationcode:
+      class: Api\TaurusBundle\EventListener\CheckAuthorizationCodeListener
+      tags:
+         - { name: kernel.event_listener, event: check.auhorizationcode, method: onProcess }
+         
+         
+   apitaurus.execute.transaction:
+      class: Api\TaurusBundle\EventListener\ExecuteTransactionListener
+      tags:
+         - { name: kernel.event_listener, event: execute.transaction, method: onProcess }
+         
+         
+   apitaurus.send.operationcode:
+      class: Api\TaurusBundle\EventListener\SendOperationCodeListener
+      tags:
+         - { name: kernel.event_listener, event: send.operationcode, method: onProcess }
+         
+         
+   apitaurus.save.transaction:
+      class: Api\TaurusBundle\EventListener\SaveTransactionListener
+      tags:
+         - { name: kernel.event_listener, event: save.transaction, method: onProcess }
+         
+         
+   apitaurus.cancel.transaction:
+      class: Api\TaurusBundle\EventListener\CancelTransactionListener
+      tags:
+         - { name: kernel.event_listener, event: cancel.transaction, method: onProcess }

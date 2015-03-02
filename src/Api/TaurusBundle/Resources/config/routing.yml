@@ -1,0 +1,23 @@
+api_taurus_info:
+    pattern:  /index
+    defaults: { _controller: ApiTaurusBundle:Default:index }
+    requirements:
+        _format: json
+    
+api_taurus_verify_secret_code:
+    pattern:  /verify/secret-code
+    defaults: { _controller: ApiTaurusBundle:Default:verifySecretCode }
+    requirements:
+        _format: json
+    
+api_taurus_verify_authorization_code:
+    pattern:  /verify/authorization-code
+    defaults: { _controller: ApiTaurusBundle:Default:veryfyAuthorizationCode }
+    requirements:
+        _format: json
+    
+api_taurus_execute_payment:
+    pattern:  /execute/transaction
+    defaults: { _controller: ApiTaurusBundle:Default:executeTransaction }
+    requirements:
+        _format: json
