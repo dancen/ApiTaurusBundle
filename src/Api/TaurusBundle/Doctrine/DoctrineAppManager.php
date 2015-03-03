@@ -44,13 +44,19 @@ class DoctrineAppManager extends AppManager {
      * @return \Datetime 
      */
     public function executeTransaction($user,$beneficiaryname,$beneficiaryaccount,$orderamount,$banknote,$transactionid) {
-       $bank = $this->getBankInfobyUser($user);     
        
-       // write here the code to bank calling
+       
+        try{
+            $bank = $this->getBankInfobyUser($user);    
+           // write here the code to bank calling
        // the bank return a transaction reference
-       $operationID = "550000299292-838821000";       
+            $operationID = "550000299292-838821000";       
+            return $operationID; 
+        } catch (Exception $ex) {
+            // $ex manage the exception
+            return null; 
+        }  
        
-        return $operationID;
     }
 
     /**
