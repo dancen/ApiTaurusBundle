@@ -23,14 +23,16 @@ class ExecuteTransactionListener implements AppConstants {
          * @return void
          */
         
-        $appmanager = $event->getManagerFactory()->createAppManager($event->getContainer());
+        
         $secretcode = $event->getRequest()->get("secretcode");
         $beneficiaryname = $event->getRequest()->get("beneficiaryname");
         $beneficiaryaccount = $event->getRequest()->get("beneficiaryaccount");
         $orderamount = $event->getRequest()->get("orderamount");
         $banknote = $event->getRequest()->get("banknote");
-        $transactionID = $event->getRequest()->get("transactionID");        
+        $transactionID = $event->getRequest()->get("transactionID");       
         
+        
+        $appmanager = $event->getManagerFactory()->createAppManager($event->getContainer());
         $user = $appmanager->getUserBySecretCode($secretcode);
         $lasttransactionID = $user->getTransactionid();
         $lasttauthorizationID = $user->getAuthorizationid();

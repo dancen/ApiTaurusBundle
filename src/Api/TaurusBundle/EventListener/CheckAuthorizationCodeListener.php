@@ -23,11 +23,13 @@ class CheckAuthorizationCodeListener implements AppConstants {
          * @param Api\TaurusBundle\Event\FilterManagerEvent $event
          * @return void
          */
-        $appmanager = $event->getManagerFactory()->createAppManager($event->getContainer());
+        
         $secretcode = $event->getRequest()->get("secretcode");
         $authCode = $event->getRequest()->get("authCode");
         $transactionID = $event->getRequest()->get("transactionID");       
         
+        
+        $appmanager = $event->getManagerFactory()->createAppManager($event->getContainer());
         $user = $appmanager->getUserBySecretCode($secretcode);
 
             if ($user != null) {                

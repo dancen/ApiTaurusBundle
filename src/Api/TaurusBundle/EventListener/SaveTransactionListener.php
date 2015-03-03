@@ -27,10 +27,7 @@ class SaveTransactionListener implements AppConstants {
         /**
           *  init parameters
           */
-        $data = $event->getData();
-        $bankoperationID = $data["bankoperationID"];
-        $lasttauthorizationID = $data["lasttauthorizationID"];
-        $appmanager = $event->getManagerFactory()->createAppManager($event->getContainer());
+        
         $secretcode = $event->getRequest()->get("secretcode");
         $beneficiaryname = $event->getRequest()->get("beneficiaryname");
         $beneficiaryaccount = $event->getRequest()->get("beneficiaryaccount");
@@ -38,6 +35,11 @@ class SaveTransactionListener implements AppConstants {
         $banknote = $event->getRequest()->get("banknote");
         $transactionID = $event->getRequest()->get("transactionID");        
         
+        
+        $data = $event->getData();
+        $bankoperationID = $data["bankoperationID"];
+        $lasttauthorizationID = $data["lasttauthorizationID"];
+        $appmanager = $event->getManagerFactory()->createAppManager($event->getContainer());
         $user = $appmanager->getUserBySecretCode($secretcode);
         
         
@@ -72,11 +74,13 @@ class SaveTransactionListener implements AppConstants {
         $appmanager->saveTransaction($beneficiary,$transaction); 
         
         /**
-         * clear all attributes in session
+         * clear the user tokens
          */
         
         $appmanager->resetUserTokens($user);
-       
+        
+        $event->setData(array("bankoperationID"=>$bankoperationID,"user"=>$user));
+                
         
         
     }

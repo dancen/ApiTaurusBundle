@@ -20,11 +20,14 @@ class SendOperationCodeListener implements AppConstants {
          * @param Api\TaurusBundle\Event\FilterManagerEvent $event
          * @return void
          */
-        $session = $event->getRequest()->getSession();
-        $appmanager = $event->getManagerFactory()->createAppManager($event->getContainer());
-        $bankoperationID = $session->get("operationid");
-        $user = $appmanager->verifySecretCode($session->get("user"), $session->get("email"));        
+        
+        $data = $event->getData();
+        $bankoperationID = $data["bankoperationID"];
+        $user = $data["user"];
+        
+        $appmanager = $event->getManagerFactory()->createAppManager($event->getContainer());   
         $appmanager->sendOperationCode($bankoperationID,$user);
+        
     }
     
     

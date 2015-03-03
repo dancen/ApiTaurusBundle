@@ -101,6 +101,7 @@ class DefaultController extends Controller {
         
         if($event->getMessage() ==  AppConstants::SUCCESS_RESPONSE){
               $dispatcher->dispatch(ApiTaurusEvents::SAVE_TRANSACTION, $event);
+              $dispatcher->dispatch(ApiTaurusEvents::SEND_OPERATION_CODE, $event);
         }
         
         return $event->getResponse();

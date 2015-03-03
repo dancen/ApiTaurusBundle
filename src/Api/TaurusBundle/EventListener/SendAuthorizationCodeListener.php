@@ -23,9 +23,12 @@ class SendAuthorizationCodeListener implements AppConstants {
          * @return void
          */
         
-        $appmanager = $event->getManagerFactory()->createAppManager($event->getContainer());
+        
         $secretcode = $event->getRequest()->get("secretcode");
         $email = $event->getRequest()->get("email");
+        
+        
+        $appmanager = $event->getManagerFactory()->createAppManager($event->getContainer());
 
         if ($secretcode != "" && $email != "") {
 
