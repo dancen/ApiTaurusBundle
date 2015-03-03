@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityRepository;
 class UserRepository extends EntityRepository
 {
     
-    public function getUser($secretcode,$email) {
+    public function verifyUser($secretcode,$email) {
         return $this->getEntityManager()
                 ->createQuery("SELECT a FROM ApiTaurusBundle:User a WHERE a.secretcode='" . $secretcode . "' AND a.email='" . $email . "'")
                 ->getSingleResult();
@@ -25,5 +25,11 @@ class UserRepository extends EntityRepository
                 ->getSingleResult();
     }
     
-   
+    public function getUserBySecretCode($secretcode) {
+        return $this->getEntityManager()
+                ->createQuery("SELECT a FROM ApiTaurusBundle:User a WHERE a.secretcode='" . $secretcode . "'")
+                ->getSingleResult();
+    }
+    
+  
 }

@@ -13,6 +13,16 @@ use Api\TaurusBundle\Model\AppConstants;
 class DoctrineAppManager extends AppManager {
     
 
+    /**
+     * Get getInfosHistory
+     *
+     * @return array
+     */
+    public function getUserBySecretCode($secretcode) {        
+        $repository = $this->em_loader->getEntityManager()->getRepository('ApiTaurusBundle:User');
+        $user = $repository->getUserBySecretCode($secretcode);              
+        return $user;
+    }
         
     
     /**
@@ -22,7 +32,7 @@ class DoctrineAppManager extends AppManager {
      */
     public function verifySecretCode($secretcode,$email) {        
         $repository = $this->em_loader->getEntityManager()->getRepository('ApiTaurusBundle:User');
-        $user = $repository->getUser($secretcode,$email);              
+        $user = $repository->verifyUser($secretcode,$email);              
         return $user;
     }
     
@@ -37,6 +47,17 @@ class DoctrineAppManager extends AppManager {
         return $bank->getBankinfo();
     }
     
+    /**
+     * Get getInfosHistory
+     *s
+     * @return array
+     */
+    public function getTokenByUser($user) {        
+        $repository = $this->em_loader->getEntityManager()->getRepository('ApiTaurusBundle:User');
+        $user = $repository->findBy($user->getId());              
+        return $user->getToken();
+    }
+    
        
     /**
      * Get getLastInfoDatetimeByUserAndLocation
@@ -46,16 +67,20 @@ class DoctrineAppManager extends AppManager {
     public function executeTransaction($user,$beneficiaryname,$beneficiaryaccount,$orderamount,$banknote,$transactionid) {
        
        
-        try{
-            $bank = $this->getBankInfobyUser($user);    
-           // write here the code to bank calling
-       // the bank return a transaction reference
-            $operationID = "550000299292-838821000";       
-            return $operationID; 
-        } catch (Exception $ex) {
-            // $ex manage the exception
-            return null; 
-        }  
+//        try{
+//            $bank = $this->getBankInfobyUser($user);    
+//           // write here the code to bank calling
+//       // the bank return a transaction reference
+//            $operationID = "550000299292-838821000";       
+//            return $operationID; 
+//        } catch (Exception $ex) {
+//            // $ex manage the exception
+//            return null; 
+//        }  
+        
+        //test
+        $operationID = "550000299292-838821000";       
+        return $operationID; 
        
     }
 
@@ -67,6 +92,23 @@ class DoctrineAppManager extends AppManager {
         
         $this->em_loader->getEntityManager()->persist($beneficiary);
         $this->em_loader->getEntityManager()->persist($transaction);
+        $this->em_loader->getEntityManager()->flush();
+        
+    }
+    
+    public function saveTokenByUser( $user ) {
+        
+        $this->em_loader->getEntityManager()->persist($user);
+        $this->em_loader->getEntityManager()->flush();
+        
+    }
+    
+    public function resetUserTokens( $user ) {
+        
+        $user->setTransactionid("");
+        $user->setAuthorizationid("");
+        $user->setLastaccess(new \DateTime("now"));
+        $this->em_loader->getEntityManager()->persist($user);
         $this->em_loader->getEntityManager()->flush();
         
     }

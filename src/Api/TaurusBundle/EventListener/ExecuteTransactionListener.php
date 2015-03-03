@@ -23,50 +23,39 @@ class ExecuteTransactionListener implements AppConstants {
          * @return void
          */
         
-       
-        $session = $event->getRequest()->getSession();         
-        $appmanager = $event->getManagerFactory()->createAppManager($event->getContainer());       
-        $trassession = $session->get("transactionid");
-        
-        /**
-         * retrieve variable from request object
-         */
+        $appmanager = $event->getManagerFactory()->createAppManager($event->getContainer());
+        $secretcode = $event->getRequest()->get("secretcode");
         $beneficiaryname = $event->getRequest()->get("beneficiaryname");
         $beneficiaryaccount = $event->getRequest()->get("beneficiaryaccount");
         $orderamount = $event->getRequest()->get("orderamount");
         $banknote = $event->getRequest()->get("banknote");
         $transactionID = $event->getRequest()->get("transactionID");        
         
-        
-        
+        $user = $appmanager->getUserBySecretCode($secretcode);
+        $lasttransactionID = $user->getTransactionid();
+        $lasttauthorizationID = $user->getAuthorizationid();
         /**
          * check post data and execute the transaction
          */
-        if (($beneficiaryname != "") &&
-                ($beneficiaryaccount != "") &&
-                ($orderamount != "") &&
-                ($banknote != "") &&
-                ($transactionID == $trassession)) {
+        if (($beneficiaryname != "") && ($beneficiaryaccount != "") &&
+                ($orderamount != "") && ($banknote != "") &&($transactionID == $lasttransactionID)) {
 
             
             /**
              * check post data and execute the call to the users's bank
              * the bank return the operation id reference
              */
-            $user = $appmanager->verifySecretCode($session->get("user"), $session->get("email"));
             $bankoperationID = $appmanager->executeTransaction($user,
                     $beneficiaryname,
                     $beneficiaryaccount,
                     $orderamount,
                     $banknote,
-                    $transactionID);
+                    $lasttransactionID);
             
-
+            //$bankoperationID = "qwfqwiojcqoio";
             if ($bankoperationID) {
                                                 
-                $session->set("operationid", $bankoperationID);
-                
-                
+                                
                 /**
                  * set the json response
                  */
@@ -80,7 +69,7 @@ class ExecuteTransactionListener implements AppConstants {
                 /**
                  * set the success system message
                  */
-               
+                $event->setData(array("bankoperationID"=>$bankoperationID,"lasttauthorizationID"=>$lasttauthorizationID));
                 $event->setMessage(AppConstants::SUCCESS_RESPONSE);
                 
             } else {

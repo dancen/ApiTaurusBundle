@@ -22,14 +22,28 @@ class SendAuthorizationCodeListener implements AppConstants {
          * @param Api\TaurusBundle\Event\FilterManagerEvent $event
          * @return void
          */
+        
         $appmanager = $event->getManagerFactory()->createAppManager($event->getContainer());
-        $session = $event->getRequest()->getSession();
-        $authorizationcode = $appmanager->generateAuthorizationCode();
-        $session->set("authorizationcode", $authorizationcode);
-        $response = $appmanager->sendAuthorizationCode($authorizationcode);
-        if ($response == AppConstants::ERROR_RESPONSE) {
+        $secretcode = $event->getRequest()->get("secretcode");
+        $email = $event->getRequest()->get("email");
+
+        if ($secretcode != "" && $email != "") {
+
+            $user = $appmanager->verifySecretCode($secretcode, $email); 
+            $authorizationcode = $appmanager->generateAuthorizationCode();
+            $user->setAuthorizationid($authorizationcode);
+            $appmanager->saveTokenByUser($user);
+            $response = $appmanager->sendAuthorizationCode($authorizationcode);
+            
+             if ($response == AppConstants::ERROR_RESPONSE) {
+                    $event->setMessage(AppConstants::ERROR_RESPONSE);
+            }
+        
+        } else {
             $event->setMessage(AppConstants::ERROR_RESPONSE);
-        }
+        } 
+        
+       
 
            
     }

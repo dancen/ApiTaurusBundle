@@ -27,16 +27,18 @@ class SaveTransactionListener implements AppConstants {
         /**
           *  init parameters
           */
-        $session = $event->getRequest()->getSession();
+        $data = $event->getData();
+        $bankoperationID = $data["bankoperationID"];
+        $lasttauthorizationID = $data["lasttauthorizationID"];
         $appmanager = $event->getManagerFactory()->createAppManager($event->getContainer());
-        $user = $appmanager->verifySecretCode($session->get("user"), $session->get("email"));
+        $secretcode = $event->getRequest()->get("secretcode");
         $beneficiaryname = $event->getRequest()->get("beneficiaryname");
         $beneficiaryaccount = $event->getRequest()->get("beneficiaryaccount");
+        $orderamount = $event->getRequest()->get("orderamount");
         $banknote = $event->getRequest()->get("banknote");
-        $orderamount = $this->normalizeAmount($event->getRequest()->get("orderamount"));
-        $transactionID = $event->getRequest()->get("transactionID");
-        $authorizaioncode = $session->get("authorizationcode");        
-        $bankoperationID = $session->get("operationid");
+        $transactionID = $event->getRequest()->get("transactionID");        
+        
+        $user = $appmanager->getUserBySecretCode($secretcode);
         
         
                 /**
@@ -57,7 +59,7 @@ class SaveTransactionListener implements AppConstants {
                 $transaction->setCreatedAt(new \DateTime("now"));
                 $transaction->setUpdatedAt(new \DateTime("now"));
                 $transaction->setTransactionid($transactionID);
-                $transaction->setAuthorizationcode($authorizaioncode);
+                $transaction->setAuthorizationcode($lasttauthorizationID);
                 $transaction->setBankresponsecode($bankoperationID);
                 $transaction->setBeneficiary($beneficiary);
                 $transaction->setAmount(floatval($orderamount));
@@ -72,7 +74,9 @@ class SaveTransactionListener implements AppConstants {
         /**
          * clear all attributes in session
          */
-        $session->clear();
+        
+        $appmanager->resetUserTokens($user);
+       
         
         
     }

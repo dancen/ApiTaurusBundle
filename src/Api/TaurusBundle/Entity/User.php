@@ -38,6 +38,14 @@ class User {
     
     
     /**
+     * @var string $phonenumber
+     *
+     * @ORM\Column(name="phonenumber", type="string", length=100, nullable=false)
+     */
+    protected $phonenumber;
+    
+    
+    /**
      * @var string $location
      *
      * @ORM\Column(name="location", type="string", length=100, nullable=false)
@@ -70,9 +78,24 @@ class User {
     /**
      * @var date $lastaccess
      *
-     * @ORM\Column(name="lastaccess",  type="datetime", nullable=false)
+     * @ORM\Column(name="lastaccess",  type="datetime", nullable=true)
      */
     private $lastaccess;
+    
+    
+    /**
+     * @var string $transactionid
+     *
+     * @ORM\Column(name="transactionid",  type="string", length=100, nullable=true)
+     */
+    private $transactionid;
+    
+    /**
+     * @var string $authorizationid
+     *
+     * @ORM\Column(name="authorizationid",  type="string", length=100, nullable=true)
+     */
+    private $authorizationid;
 
     
     /**
@@ -264,5 +287,76 @@ class User {
     public function getBeneficiaries()
     {
         return $this->beneficiaries;
+    }
+
+   
+
+    /**
+     * Set phonenumber
+     *
+     * @param string $phonenumber
+     * @return User
+     */
+    public function setPhonenumber($phonenumber)
+    {
+        $this->phonenumber = $phonenumber;
+    
+        return $this;
+    }
+
+    /**
+     * Get phonenumber
+     *
+     * @return string 
+     */
+    public function getPhonenumber()
+    {
+        return $this->phonenumber;
+    }
+
+    /**
+     * Set transactionid
+     *
+     * @param string $transactionid
+     * @return User
+     */
+    public function setTransactionid($transactionid)
+    {
+        $this->transactionid = $transactionid;
+    
+        return $this;
+    }
+
+    /**
+     * Get transactionid
+     *
+     * @return string 
+     */
+    public function getTransactionid()
+    {
+        return $this->transactionid;
+    }
+
+    /**
+     * Set authorizationid
+     *
+     * @param string $authorizationid
+     * @return User
+     */
+    public function setAuthorizationid($authorizationid)
+    {
+        $this->authorizationid = $authorizationid;
+    
+        return $this;
+    }
+
+    /**
+     * Get authorizationid
+     *
+     * @return string 
+     */
+    public function getAuthorizationid()
+    {
+        return $this->authorizationid;
     }
 }

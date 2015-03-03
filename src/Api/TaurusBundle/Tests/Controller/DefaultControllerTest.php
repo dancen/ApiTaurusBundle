@@ -9,7 +9,7 @@ class DefaultControllerTest extends WebTestCase {
     public function testIndex() {
         $client = static::createClient();
         $client->request(
-                'GET', '/index', array(), array(), array(
+                'GET', '/taurus/index', array(), array(), array(
             'CONTENT_TYPE' => 'application/json',
             'HTTP_X-Requested-With' => 'XMLHttpRequest',
                 )
@@ -34,7 +34,7 @@ class DefaultControllerTest extends WebTestCase {
     public function testVerifySecretCode() {
         $client = static::createClient();
         $client->request(
-                'GET', '/verify/secret-code', array("secretcode" => "111111", "email" => "daniele.centamore@gmail.com"), array(), array(
+                'GET', '/taurus/verify/secret-code', array("secretcode" => "111111", "email" => "daniele.centamore@gmail.com"), array(), array(
             'CONTENT_TYPE' => 'application/json',
             'HTTP_X-Requested-With' => 'XMLHttpRequest',
                 )
@@ -59,7 +59,7 @@ class DefaultControllerTest extends WebTestCase {
     public function testVeryfyAuthorizationCode() {
         $client = static::createClient();
         $client->request(
-                'GET', 'verify/authorization-code', array("secretcode" => "111111", "authCode" => "999999999999", "transactionID" => "qwdcqjkqwjdcqwklklwev24424r21"), array(), array(
+                'GET', '/taurus/verify/authorization-code', array("secretcode" => "111111", "authCode" => "999999999999", "transactionID" => "cf06eb7e8ea609b94f1474a8365d2afe-4560"), array(), array(
             'CONTENT_TYPE' => 'application/json',
             'HTTP_X-Requested-With' => 'XMLHttpRequest',
                 )
@@ -82,7 +82,7 @@ class DefaultControllerTest extends WebTestCase {
     public function testExecuteTransaction() {
         $client = static::createClient();
         $client->request(
-                'GET', 'execute/transaction', array("beneficiaryname" => "Daniele Centamore", "beneficiaryaccount" => "IT000000000000000000000000002333", "orderamount" => "123.00","banknote" => "fattura: 234","transactionID" => "2848294890fwe09009"), array(), array(
+                'GET', '/taurus/execute/transaction', array("secretcode" => "111111","beneficiaryname" => "Daniele Centamore", "beneficiaryaccount" => "IT000000000000000000000000002333", "orderamount" => "123.00","banknote" => "fattura: 234","transactionID" => "cf06eb7e8ea609b94f1474a8365d2afe-4560"), array(), array(
             'CONTENT_TYPE' => 'application/json',
             'HTTP_X-Requested-With' => 'XMLHttpRequest',
                 )

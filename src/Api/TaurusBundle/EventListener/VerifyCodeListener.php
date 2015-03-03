@@ -23,7 +23,6 @@ class VerifyCodeListener implements AppConstants {
         // 
 
         $appmanager = $event->getManagerFactory()->createAppManager($event->getContainer());
-        $session = $event->getRequest()->getSession();
         $secretcode = $event->getRequest()->get("secretcode");
         $email = $event->getRequest()->get("email");
 
@@ -31,11 +30,11 @@ class VerifyCodeListener implements AppConstants {
 
             $user = $appmanager->verifySecretCode($secretcode, $email);
 
-            if ($user != null) {
-                $session->set("user", $secretcode);
-                $session->set("email", $email);
-                $transactionid = $appmanager->generateTransactionID($session);
-                $session->set("transactionid", $transactionid);
+            if ($user != null) {                
+                $transactionid = $appmanager->generateTransactionID($secretcode,$email);
+                $user->setLastaccess(new \DateTime("now"));
+                $user->setTransactionid($transactionid);
+                $appmanager->saveTokenByUser($user);
                 $bankinfo = $appmanager->getBankInfobyUser($user);
                 $response = new Response(json_encode(array(
                             "transactionid" => $transactionid,

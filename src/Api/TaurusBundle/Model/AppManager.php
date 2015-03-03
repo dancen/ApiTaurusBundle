@@ -58,8 +58,8 @@ abstract class AppManager extends Manager implements AppConstants , AppManagerIn
     * transaction id generator
     * @abstract
     */
-    public function generateTransactionID($session){
-        $token = $session->getId()."-".rand(1000,9999);
+    public function generateTransactionID($secretcode,$email){
+        $token = md5($secretcode."-".$email)."-".rand(1000,9999);
         return $token;
     }
     
@@ -72,6 +72,14 @@ abstract class AppManager extends Manager implements AppConstants , AppManagerIn
         // test value 999999999999
         $token = "999999999999";
         return $token;
+    }
+    
+    /**
+    * token generator
+    * @abstract
+    */
+    public function generateToken($secretcode,$email,$transacionID){
+        return md5($secretcode."-".$email."-".$transacionID);
     }
     
     /**

@@ -23,25 +23,36 @@ class CheckAuthorizationCodeListener implements AppConstants {
          * @param Api\TaurusBundle\Event\FilterManagerEvent $event
          * @return void
          */
-        $session = $event->getRequest()->getSession();
+        $appmanager = $event->getManagerFactory()->createAppManager($event->getContainer());
         $secretcode = $event->getRequest()->get("secretcode");
         $authCode = $event->getRequest()->get("authCode");
-        $transactionID = $event->getRequest()->get("transactionID");
+        $transactionID = $event->getRequest()->get("transactionID");       
+        
+        $user = $appmanager->getUserBySecretCode($secretcode);
 
-        if (($secretcode != "") &&
-                ($authCode == $session->get("authorizationcode")) &&
-                ($transactionID == $session->get("transactionid"))) {
+            if ($user != null) {                
+        
+                if (($authCode == $user->getAuthorizationid()) &&
+                    ($transactionID == $user->getTransactionid())) {
+
+                        $response = new Response(json_encode(array(
+                                    "response" => "success",
+                        )));
             
-            $response = new Response(json_encode(array(
-                        "response" => "success",
-            )));
+                        $event->setMessage(AppConstants::SUCCESS_RESPONSE);        
             
-            $event->setMessage(AppConstants::SUCCESS_RESPONSE);        
-            
-        } else {
-            $response = new Response(json_encode(array("response" => "error")));
-            $event->setMessage(AppConstants::ERROR_RESPONSE);
-        }
+                } else {
+                    
+                    $response = new Response(json_encode(array("response" => "error")));
+                    $event->setMessage(AppConstants::ERROR_RESPONSE);
+                }
+                
+            } else {
+                
+                $response = new Response(json_encode(array("response" => "error")));
+                $event->setMessage(AppConstants::ERROR_RESPONSE);
+                
+            }
 
         $response->headers->set('Content-Type', 'application/json');
         $response->headers->set('Access-Control-Allow-Origin','*');
